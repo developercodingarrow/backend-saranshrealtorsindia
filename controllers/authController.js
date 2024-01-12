@@ -32,7 +32,7 @@ const OtpURL = () => {
 // jwt tooken function
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    expiresIn: 3600,
   });
 };
 
@@ -108,6 +108,7 @@ exports.userRegisteraion = catchAsync(async (req, res, next) => {
       apiFor: "register",
       otp,
       UrlToken,
+      message: "Registration Successfull",
     });
   }
 });
@@ -176,7 +177,7 @@ exports.forgatePassword = catchAsync(async (req, res, next) => {
 
   const forgotePasswordURL = `http:://${req.get(
     "host"
-  )}/api/v1/users/reset-password/${resetToken}`;
+  )}/api/v1/users/saranshrealtorsindia/reset-password/${resetToken}`;
   await sendEmail({
     email: user.email,
     subject: "Forgot Password ",
@@ -185,6 +186,7 @@ exports.forgatePassword = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "Success",
+    apiFor: "forgatePassword",
     user,
     resetToken,
   });
@@ -215,7 +217,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   }
 
   user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  // user.passwordConfirm = req.body.passwordConfirm;
   user.PasswordResetToken = undefined;
   user.PasswordResetExpires = undefined;
 
