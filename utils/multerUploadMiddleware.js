@@ -38,14 +38,18 @@ const createMulterUpload = (
 };
 
 // For logo
-const logoStorage = createMulterStorage(
-  `${__dirname}/../../website-front-end/public/companies-logo`,
-  "logo"
+const thumblinStorage = createMulterStorage(
+  `${__dirname}/../../frontend-saranshrealtorsindia/public/project-thumblin`,
+  "project-thumblin"
 );
 
-const logoUpload = createMulterUpload(logoStorage, "logo", true);
+const thumbilUpload = createMulterUpload(
+  thumblinStorage,
+  "ProjectThumblin",
+  true
+);
 
-exports.logoImageMidelwear = logoUpload;
+exports.thumblinMidelwear = thumbilUpload;
 
 // For galleries
 const galleryStorage = createMulterStorage(

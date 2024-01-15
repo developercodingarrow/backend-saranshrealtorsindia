@@ -180,7 +180,7 @@ exports.forgatePassword = catchAsync(async (req, res, next) => {
   )}/api/v1/users/saranshrealtorsindia/reset-password/${resetToken}`;
   await sendEmail({
     email: user.email,
-    subject: "Forgot Password ",
+    subject: "Reset Password ",
     message: `<h1>for Reste Your password click on this link ${forgotePasswordURL} and  Reset Your Password  <h1> `,
   });
 
@@ -227,6 +227,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "Success",
     message: "your password Reset sucesfully",
+    apiFor: "resetPassword",
   });
 });
 
