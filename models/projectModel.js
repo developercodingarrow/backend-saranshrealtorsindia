@@ -14,7 +14,7 @@ const projectSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      require: [true, "Please Tell us your project Price!"],
+      // require: [true, "Please Tell us your project Price!"],
     },
     pricePrefix: {
       type: String,
@@ -26,7 +26,7 @@ const projectSchema = new mongoose.Schema(
 
     city: {
       type: String,
-      require: [true, "Please Tell us your project Name!"],
+      // require: [true, "Please Tell us your project Name!"],
     },
 
     slugCity: {
@@ -36,22 +36,22 @@ const projectSchema = new mongoose.Schema(
 
     projectLocation: {
       type: String,
-      require: [true, "Please Tell us your project Name!"],
+      // require: [true, "Please Tell us your project Name!"],
     },
 
     slugProjectLocation: {
       type: String,
-      require: [true, "Please Tell us your project Name!"],
+      // require: [true, "Please Tell us your project Name!"],
     },
 
     builder: {
       type: String,
-      require: [true, "Please Tell us your Builder Name!"],
+      // require: [true, "Please Tell us your Builder Name!"],
     },
 
     slugBuilder: {
       type: String,
-      require: [true, "Please Tell us your Builder Name!"],
+      // require: [true, "Please Tell us your Builder Name!"],
     },
     basicPrice: {
       type: String,
@@ -65,12 +65,8 @@ const projectSchema = new mongoose.Schema(
     unitsNo: {
       type: Number,
     },
-    typesofUnits: [
-      {
-        units: String,
-        slug: String,
-      },
-    ],
+    typesofUnits: ["2 BHK", "3 BHK", "4 BHK"],
+    slugtypesofUnits: [],
     Possession: {
       type: String,
     },
@@ -86,7 +82,7 @@ const projectSchema = new mongoose.Schema(
     },
     slugProjectStatus: {
       type: String,
-      require: [true, "slug didn't work"],
+      // require: [true, "slug didn't work"],
     },
     ProjectThumblin: {
       url: {
@@ -134,31 +130,40 @@ projectSchema.pre("save", function (next) {
   next();
 });
 
-projectSchema.pre("save", function (next) {
-  this.slugCity = slugify(this.city, {
-    lower: true,
-  });
-  next();
-});
+// projectSchema.pre("save", function (next) {
+//   this.slugCity = slugify(this.city, {
+//     lower: true,
+//   });
+//   next();
+// });
+
+// projectSchema.pre("save", function (next) {
+//   this.slugProjectLocation = slugify(this.projectLocation, {
+//     lower: true,
+//   });
+//   next();
+// });
+
+// projectSchema.pre("save", function (next) {
+//   this.slugBuilder = slugify(this.builder, {
+//     lower: true,
+//   });
+//   next();
+// });
+
+// projectSchema.pre("save", function (next) {
+//   this.slugProjectStatus = slugify(this.projectStatus, {
+//     lower: true,
+//   });
+//   next();
+// });
 
 projectSchema.pre("save", function (next) {
-  this.slugProjectLocation = slugify(this.projectLocation, {
-    lower: true,
-  });
-  next();
-});
-
-projectSchema.pre("save", function (next) {
-  this.slugBuilder = slugify(this.builder, {
-    lower: true,
-  });
-  next();
-});
-
-projectSchema.pre("save", function (next) {
-  this.slugProjectStatus = slugify(this.projectStatus, {
-    lower: true,
-  });
+  if (this.isModified("typesofUnits")) {
+    this.slugtypesofUnits = this.typesofUnits.map((unit) =>
+      slugify(unit, { lower: true })
+    );
+  }
   next();
 });
 

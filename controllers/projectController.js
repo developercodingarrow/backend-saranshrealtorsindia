@@ -11,27 +11,18 @@ exports.deleteProject = Factory.deleteOneByBody(Projects);
 exports.getAllProjets = Factory.getAll(Projects);
 //4) GET SINGLE PROJECT API
 exports.getProject = Factory.getOneBySlug(Projects);
-
 //5) UPDATE PROJECT THUMBLIN API
-exports.uploadThumblin = catchAsync(async (req, res, next) => {
-  const image = req.files[0].filename;
-  const slug = req.params.slug;
-  console.log(req.files);
-  const data = await Projects.findOneAndUpdate(
-    { slug: slug },
-    {
-      ProjectThumblin: {
-        url: image,
-        altText: req.files[0].originalname,
-      },
-    }
-  );
-  return res.status(200).json({
-    status: "Success",
-    message: "Project Thumblin image Update Succesfully",
-    data,
-  });
-});
+exports.uploadThumblin = Factory.updateThumblinBySlugAndField(
+  Projects,
+  "ProjectThumblin"
+);
 // 6) UPDATE PROJECT GALLERY API
-
+exports.uploadCoverImages = Factory.uploadGalleryByIdAndField(
+  Projects,
+  "ProjectCoverImage"
+);
 // 7)UPDATE PROJECT FLOOR PLAN API
+exports.uploadFloorPlanImages = Factory.uploadGalleryByIdAndField(
+  Projects,
+  "floorPlanImages"
+);

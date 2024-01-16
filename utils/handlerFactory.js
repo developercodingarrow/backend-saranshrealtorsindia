@@ -7,9 +7,7 @@ exports.createOne = (Model) => {
     const doc = await Model.create(req.body);
     res.status(201).json({
       status: "success",
-      data: {
-        data: doc,
-      },
+      result: doc,
     });
   });
 };
@@ -31,13 +29,11 @@ exports.getAll = (Model) => {
 // This function for GET ALL
 exports.getOneBySlug = (Model) => {
   return catchAsync(async (req, res, next) => {
-    const doc = await Model.findOne({ slug: req.params.slug });
-    res.status(201).json({
+    const doc = await Model.findOne({ _id: req.params.id });
+    res.status(200).json({
       status: "success",
-      result: doc.length,
-      data: {
-        data: doc,
-      },
+      total: doc.length,
+      result: doc,
     });
   });
 };
@@ -75,6 +71,66 @@ exports.updateOne = (Model) => {
     res.status(204).json({
       status: "success",
       result: doc,
+    });
+  });
+};
+
+// Generic function to update a document's thumbnail image by slug for any model and field name
+exports.updateThumblinBySlugAndField = (Model, fieldName) => {
+  return catchAsync(async (req, res, next) => {
+    const image = req.files[0].filename;
+    const id = req.params.id;
+    // Create an object with the dynamically provided field name
+    const updateObject = {
+      [fieldName]: {
+        url: image,
+        altText: req.files[0].originalname,
+      },
+    };
+    // Find and update the document based on the provided slug
+    const data = await Model.findByIdAndUpdate(id, updateObject, {
+      new: true,
+      upsert: true,
+    });
+
+    // Respond with a success message and the updated data
+    return res.status(200).json({
+      status: "Success",
+      message: `${fieldName} updated successfully`,
+      data,
+    });
+  });
+};
+
+// Generic function to upload cover images for any model and field name
+exports.uploadGalleryByIdAndField = (Model, fieldName) => {
+  return catchAsync(async (req, res, next) => {
+    const galleryImages = req.files;
+    const id = req.params.id;
+    const images = galleryImages.map((file) => ({
+      url: file.filename,
+      altText: req.body.altText,
+      descreption: req.body.descreption,
+    }));
+
+    // Use findByIdAndUpdate to find the document by ID and update it
+    const data = await Model.findByIdAndUpdate(
+      id,
+      {
+        $push: { [`${fieldName}`]: { $each: images } },
+      },
+      { new: true }
+    );
+
+    if (!data) {
+      return res
+        .status(404)
+        .json({ status: "error", message: `${fieldName} not found` });
+    }
+
+    res.status(201).json({
+      status: "success",
+      data,
     });
   });
 };

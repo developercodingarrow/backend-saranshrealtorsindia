@@ -37,7 +37,7 @@ const createMulterUpload = (
   };
 };
 
-// For logo
+// project Thumblin
 const thumblinStorage = createMulterStorage(
   `${__dirname}/../../frontend-saranshrealtorsindia/public/project-thumblin`,
   "project-thumblin"
@@ -51,16 +51,30 @@ const thumbilUpload = createMulterUpload(
 
 exports.thumblinMidelwear = thumbilUpload;
 
-// For galleries
-const galleryStorage = createMulterStorage(
-  `${__dirname}/../../website-front-end/public/companies-gallery-images`,
-  "gallery-image"
+// For Covers
+const ProjectCoverImageStorage = createMulterStorage(
+  `${__dirname}/../../frontend-saranshrealtorsindia/public/project-cover-images`,
+  "Project-CoverImage"
 );
 
-const galleryUpload = createMulterUpload(
-  galleryStorage,
-  "galleryPhotos",
+const projectCoverImagesUpload = createMulterUpload(
+  ProjectCoverImageStorage,
+  "ProjectCoverImage",
+  true,
+  4
+);
+exports.projectCoverImageMidelwear = projectCoverImagesUpload;
+
+// For Floor Plan
+const ProjectFloorPlanImageStorage = createMulterStorage(
+  `${__dirname}/../../frontend-saranshrealtorsindia/public/project-floorPlan-Images`,
+  "floorPlan-Images"
+);
+
+const projectFloorPlanImagesUpload = createMulterUpload(
+  ProjectFloorPlanImageStorage,
+  "floorPlanImages",
   true,
   10
 );
-exports.galleryImageMidelwear = galleryUpload;
+exports.projectFloorPlanImageMidelwear = projectFloorPlanImagesUpload;
