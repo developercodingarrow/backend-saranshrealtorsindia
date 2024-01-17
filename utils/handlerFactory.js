@@ -76,8 +76,9 @@ exports.updateOne = (Model) => {
 };
 
 // Generic function to update a document's thumbnail image by slug for any model and field name
-exports.updateThumblinBySlugAndField = (Model, fieldName) => {
+exports.updateThumblinByIdAndField = (Model, fieldName) => {
   return catchAsync(async (req, res, next) => {
+    console.log(req);
     const image = req.files[0].filename;
     const id = req.params.id;
     // Create an object with the dynamically provided field name

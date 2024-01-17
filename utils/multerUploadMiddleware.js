@@ -61,7 +61,7 @@ const projectCoverImagesUpload = createMulterUpload(
   ProjectCoverImageStorage,
   "ProjectCoverImage",
   true,
-  4
+  10
 );
 exports.projectCoverImageMidelwear = projectCoverImagesUpload;
 

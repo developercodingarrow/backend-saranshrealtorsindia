@@ -30,4 +30,6 @@ router.patch(
   projectController.uploadFloorPlanImages
 );
 
+router.delete("/delete-cover-image/:id", projectController.deleteGalleryImage);
+
 module.exports = router;
