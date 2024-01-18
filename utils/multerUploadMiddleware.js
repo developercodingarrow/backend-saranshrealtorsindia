@@ -78,3 +78,31 @@ const projectFloorPlanImagesUpload = createMulterUpload(
   10
 );
 exports.projectFloorPlanImageMidelwear = projectFloorPlanImagesUpload;
+
+// Blog Thumblin
+const blogthumblinStorage = createMulterStorage(
+  `${__dirname}/../../frontend-saranshrealtorsindia/public/blog-images`,
+  "blog-images"
+);
+
+const BlogthumbilUpload = createMulterUpload(
+  blogthumblinStorage,
+  "BlogThumblin",
+  true
+);
+
+exports.blogthumblinMidelwear = BlogthumbilUpload;
+
+// Blog CoverImage
+const blogCoverStorage = createMulterStorage(
+  `${__dirname}/../../frontend-saranshrealtorsindia/public/blog-images`,
+  "blog-cover"
+);
+
+const BlogCoverUpload = createMulterUpload(
+  blogCoverStorage,
+  "BlogCoverImage",
+  true
+);
+
+exports.blogCoverMidelwear = BlogCoverUpload;
