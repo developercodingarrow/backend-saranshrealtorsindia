@@ -30,6 +30,19 @@ router.patch(
   projectController.uploadFloorPlanImages
 );
 
-router.delete("/delete-cover-image/:id", projectController.deleteGalleryImage);
+router.delete(
+  "/delete-project-thumblin/:id",
+  projectController.deleteProjectThumblin
+);
+
+router.delete(
+  "/delete-cover-image/:id",
+  projectController.deleteProjectCoverImage
+);
+
+router.delete(
+  "/delete-floor-plan-image/:id",
+  projectController.deleteFloorPlanImage
+);
 
 module.exports = router;

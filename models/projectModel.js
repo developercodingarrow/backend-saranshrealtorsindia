@@ -130,33 +130,33 @@ projectSchema.pre("save", function (next) {
   next();
 });
 
-// projectSchema.pre("save", function (next) {
-//   this.slugCity = slugify(this.city, {
-//     lower: true,
-//   });
-//   next();
-// });
+projectSchema.pre("save", function (next) {
+  this.slugCity = slugify(this.city, {
+    lower: true,
+  });
+  next();
+});
 
-// projectSchema.pre("save", function (next) {
-//   this.slugProjectLocation = slugify(this.projectLocation, {
-//     lower: true,
-//   });
-//   next();
-// });
+projectSchema.pre("save", function (next) {
+  this.slugProjectLocation = slugify(this.projectLocation, {
+    lower: true,
+  });
+  next();
+});
 
-// projectSchema.pre("save", function (next) {
-//   this.slugBuilder = slugify(this.builder, {
-//     lower: true,
-//   });
-//   next();
-// });
+projectSchema.pre("save", function (next) {
+  this.slugBuilder = slugify(this.builder, {
+    lower: true,
+  });
+  next();
+});
 
-// projectSchema.pre("save", function (next) {
-//   this.slugProjectStatus = slugify(this.projectStatus, {
-//     lower: true,
-//   });
-//   next();
-// });
+projectSchema.pre("save", function (next) {
+  this.slugProjectStatus = slugify(this.projectStatus, {
+    lower: true,
+  });
+  next();
+});
 
 projectSchema.pre("save", function (next) {
   if (this.isModified("typesofUnits")) {

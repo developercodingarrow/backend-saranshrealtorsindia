@@ -1,9 +1,7 @@
-const fs = require("fs").promises;
-const path = require("path");
-const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
 const Projects = require("../models/projectModel");
 const Factory = require("../utils/handlerFactory");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
 
 //1) CREATE PROJECT API
 exports.createProject = Factory.createOne(Projects);
@@ -29,44 +27,49 @@ exports.uploadFloorPlanImages = Factory.uploadGalleryByIdAndField(
   "floorPlanImages"
 );
 
-exports.deleteGalleryImage = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const imageId = req.body.id;
+// exports.deleteGalleryImage = catchAsync(async (req, res, next) => {
+//   const { id } = req.params;
+//   const imageId = req.body.id;
 
-  const data = await Projects.findById(id);
-  if (!data) {
-    return next(new AppError("There is no data", 404));
-  }
+//   const data = await Projects.findById(id);
+//   if (!data) {
+//     return next(new AppError("There is no data", 404));
+//   }
 
-  // Find the image in the galleryPhotos array
-  const deletedImage = data.ProjectCoverImage.find(
-    (photo) => photo._id.toString() === imageId
-  );
+//   // Find the image in the galleryPhotos array
+//   const deletedImage = data.ProjectCoverImage.find(
+//     (photo) => photo._id.toString() === imageId
+//   );
 
-  // Remove the image from the galleryPhotos array
-  data.ProjectCoverImage = data.ProjectCoverImage.filter(
-    (photo) => photo._id.toString() !== imageId
-  );
+//   // Remove the image from the galleryPhotos array
+//   data.ProjectCoverImage = data.ProjectCoverImage.filter(
+//     (photo) => photo._id.toString() !== imageId
+//   );
 
-  // Save the updated document
-  await data.save();
+//   // Save the updated document
+//   await data.save();
 
-  // Delete the image file from the folder
-  const imagePath = path.resolve(
-    `${__dirname}/../../frontend-saranshrealtorsindia/public/project-cover-images/${deletedImage.url}`
-  );
+//   res.status(200).json({
+//     results: data.length,
+//     status: "Success",
+//     message: "Delete Image",
+//     result: data,
+//   });
+// });
 
-  try {
-    await fs.unlink(imagePath);
-    console.log(`Image deleted: ${deletedImage.url}`);
-  } catch (error) {
-    console.error(`Error deleting image: ${error.message}`);
-  }
+exports.deleteProjectCoverImage = Factory.deleteGalleryImage(
+  Projects,
+  "ProjectCoverImage"
+);
 
-  res.status(200).json({
-    results: data.length,
-    status: "Success",
-    message: "Delete Image",
-    result: data,
-  });
-});
+// Example usage for deleting FloorPlanImages
+exports.deleteFloorPlanImage = Factory.deleteGalleryImage(
+  Projects,
+  "floorPlanImages"
+);
+
+exports.deleteProjectThumblin = Factory.deleteSingleImage(
+  Projects,
+  "ProjectThumblin",
+  "project-thumblin"
+);

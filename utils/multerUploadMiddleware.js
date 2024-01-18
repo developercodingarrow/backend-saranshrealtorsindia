@@ -53,7 +53,7 @@ exports.thumblinMidelwear = thumbilUpload;
 
 // For Covers
 const ProjectCoverImageStorage = createMulterStorage(
-  `${__dirname}/../../frontend-saranshrealtorsindia/public/project-cover-images`,
+  `${__dirname}/../../frontend-saranshrealtorsindia/public/project-images`,
   "Project-CoverImage"
 );
 
@@ -67,7 +67,7 @@ exports.projectCoverImageMidelwear = projectCoverImagesUpload;
 
 // For Floor Plan
 const ProjectFloorPlanImageStorage = createMulterStorage(
-  `${__dirname}/../../frontend-saranshrealtorsindia/public/project-floorPlan-Images`,
+  `${__dirname}/../../frontend-saranshrealtorsindia/public/project-images`,
   "floorPlan-Images"
 );
 

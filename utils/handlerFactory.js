@@ -1,3 +1,5 @@
+const fs = require("fs").promises;
+const path = require("path");
 const catchAsync = require("./catchAsync");
 const AppError = require("./appError");
 
@@ -132,6 +134,90 @@ exports.uploadGalleryByIdAndField = (Model, fieldName) => {
     res.status(201).json({
       status: "success",
       data,
+    });
+  });
+};
+
+exports.deleteGalleryImage = (Model, fieldName) => {
+  return catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { imageId } = req.body;
+
+    const data = await Model.findById(id);
+    if (!data) {
+      return next(new AppError("There is no data", 404));
+    }
+
+    // Find the image in the specified array
+    const deletedImage = data[fieldName].find(
+      (photo) => photo._id.toString() === imageId
+    );
+
+    // Remove the image from the specified array
+    data[fieldName] = data[fieldName].filter(
+      (photo) => photo._id.toString() !== imageId
+    );
+
+    // Save the updated document
+    await data.save();
+
+    // Delete the image file from the folder
+    const imagePath = path.resolve(
+      `${__dirname}/../../frontend-saranshrealtorsindia/public/project-images/${deletedImage.url}`
+    );
+
+    try {
+      await fs.unlink(imagePath);
+      console.log(`Image deleted: ${deletedImage.url}`);
+    } catch (error) {
+      console.error(`Error deleting image: ${error.message}`);
+    }
+
+    res.status(200).json({
+      results: data.length,
+      status: "Success",
+      message: "Delete Image",
+      result: data,
+    });
+  });
+};
+
+exports.deleteSingleImage = (Model, fieldName, imagePath) => {
+  return catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { imageId } = req.body;
+
+    const data = await Model.findById(id);
+    if (!data) {
+      return next(new AppError("There is no data", 404));
+    }
+
+    const deletedImage = data[fieldName];
+
+    if (!deletedImage) {
+      return next(new AppError("Image not found", 404));
+    }
+
+    // Remove the image field
+    data[fieldName] = undefined;
+
+    await data.save();
+
+    const imagePathToDelete = path.resolve(
+      `${__dirname}/../../frontend-saranshrealtorsindia/public/${imagePath}/${deletedImage.url}`
+    );
+
+    try {
+      await fs.unlink(imagePathToDelete);
+      console.log(`Image deleted: ${deletedImage.url}`);
+    } catch (error) {
+      console.error(`Error deleting image: ${error.message}`);
+    }
+
+    res.status(200).json({
+      status: "Success",
+      message: "Delete Image",
+      result: data,
     });
   });
 };
