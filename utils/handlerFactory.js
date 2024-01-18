@@ -70,7 +70,7 @@ exports.updateOne = (Model) => {
       return next(new AppError("NO Document found with this ID", 404));
     }
 
-    res.status(204).json({
+    res.status(201).json({
       status: "success",
       result: doc,
     });

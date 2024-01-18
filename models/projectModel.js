@@ -12,6 +12,9 @@ const projectSchema = new mongoose.Schema(
       require: [true, "slug didn't work"],
       unique: true,
     },
+    projectDescription: {
+      type: String,
+    },
     price: {
       type: Number,
       // require: [true, "Please Tell us your project Price!"],

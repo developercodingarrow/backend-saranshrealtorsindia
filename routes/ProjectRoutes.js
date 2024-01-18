@@ -12,6 +12,8 @@ router.post("/create-project", projectController.createProject);
 router.get("/get-all-projects", projectController.getAllProjets);
 router.delete("/delete-project", projectController.deleteProject);
 router.get("/get-single-project/:id", projectController.getProject);
+router.patch("/update-project/:id", projectController.updateProject);
+
 router.patch(
   "/update-project-thumblin/:id",
   thumblinMidelwear,

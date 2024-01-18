@@ -11,6 +11,9 @@ exports.deleteProject = Factory.deleteOneByBody(Projects);
 exports.getAllProjets = Factory.getAll(Projects);
 //4) GET SINGLE PROJECT API
 exports.getProject = Factory.getOneBySlug(Projects);
+
+exports.updateProject = Factory.updateOne(Projects);
+
 //5) UPDATE PROJECT THUMBLIN API
 exports.uploadThumblin = Factory.updateThumblinByIdAndField(
   Projects,
