@@ -24,4 +24,10 @@ router.patch(
   blogController.UplodblogCoverImage
 );
 
+router.delete("/delete-blog-thumblin/:id", blogController.deleteBlogThumblin);
+router.delete(
+  "/delete-blog-cover-image/:id",
+  blogController.deleteBlogCoverImage
+);
+
 module.exports = router;

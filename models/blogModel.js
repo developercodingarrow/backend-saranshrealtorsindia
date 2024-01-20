@@ -50,6 +50,13 @@ const blogSchema = new mongoose.Schema(
         },
       },
     ],
+    keywords: {
+      type: String,
+    },
+
+    metaDescription: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

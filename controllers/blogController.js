@@ -21,3 +21,15 @@ exports.UplodblogCoverImage = Factory.updateThumblinByIdAndField(
   Blogs,
   "BlogCoverImage"
 );
+
+exports.deleteBlogThumblin = Factory.deleteSingleImage(
+  Blogs,
+  "BlogThumblin",
+  "blog-images"
+);
+
+exports.deleteBlogCoverImage = Factory.deleteSingleImage(
+  Blogs,
+  "BlogCoverImage",
+  "blog-images"
+);
