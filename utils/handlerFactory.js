@@ -18,12 +18,10 @@ exports.createOne = (Model) => {
 exports.getAll = (Model) => {
   return catchAsync(async (req, res, next) => {
     const doc = await Model.find();
-    res.status(201).json({
+    res.status(200).json({
       status: "success",
-      result: doc.length,
-      data: {
-        data: doc,
-      },
+      total: doc.length,
+      result: doc,
     });
   });
 };
@@ -49,7 +47,7 @@ exports.deleteOneByBody = (Model) => {
       return next(new AppError("NO Document found with this ID", 404));
     }
 
-    res.status(204).json({
+    res.status(200).json({
       status: "success",
       data: {
         data: doc,

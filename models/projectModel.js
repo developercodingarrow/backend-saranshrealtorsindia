@@ -17,7 +17,6 @@ const projectSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      // require: [true, "Please Tell us your project Price!"],
     },
     pricePrefix: {
       type: String,
@@ -29,33 +28,16 @@ const projectSchema = new mongoose.Schema(
 
     city: {
       type: String,
-      // require: [true, "Please Tell us your project Name!"],
-    },
-
-    slugCity: {
-      type: String,
-      require: [true, "city slug didn't work!"],
     },
 
     projectLocation: {
       type: String,
-      // require: [true, "Please Tell us your project Name!"],
-    },
-
-    slugProjectLocation: {
-      type: String,
-      // require: [true, "Please Tell us your project Name!"],
     },
 
     builder: {
       type: String,
-      // require: [true, "Please Tell us your Builder Name!"],
     },
 
-    slugBuilder: {
-      type: String,
-      // require: [true, "Please Tell us your Builder Name!"],
-    },
     basicPrice: {
       type: String,
     },
@@ -69,7 +51,6 @@ const projectSchema = new mongoose.Schema(
       type: Number,
     },
     typesofUnits: ["2 BHK", "3 BHK", "4 BHK"],
-    slugtypesofUnits: [],
     Possession: {
       type: String,
     },
@@ -125,48 +106,23 @@ const projectSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// slug the pormotional page Title
 projectSchema.pre("save", function (next) {
-  this.slug = slugify(this.projectTitle, {
-    lower: true,
-  });
-  next();
-});
+  // Check if projectTitle is provided before generating the slug
+  if (this.projectTitle) {
+    // Generate slug from projectTitle
+    const baseSlug = slugify(this.projectTitle, {
+      lower: true,
+    });
 
-projectSchema.pre("save", function (next) {
-  this.slugCity = slugify(this.city, {
-    lower: true,
-  });
-  next();
-});
-
-projectSchema.pre("save", function (next) {
-  this.slugProjectLocation = slugify(this.projectLocation, {
-    lower: true,
-  });
-  next();
-});
-
-projectSchema.pre("save", function (next) {
-  this.slugBuilder = slugify(this.builder, {
-    lower: true,
-  });
-  next();
-});
-
-projectSchema.pre("save", function (next) {
-  this.slugProjectStatus = slugify(this.projectStatus, {
-    lower: true,
-  });
-  next();
-});
-
-projectSchema.pre("save", function (next) {
-  if (this.isModified("typesofUnits")) {
-    this.slugtypesofUnits = this.typesofUnits.map((unit) =>
-      slugify(unit, { lower: true })
-    );
+    const randomString = new Date().getTime().toString(36).substring(7);
+    this.slug = `${baseSlug}-${randomString}`;
+  } else {
+    // Generate a random default slug with timestamp when projectTitle is not provided
+    this.slug = slugify(new Date().getTime().toString(36).substring(7), {
+      lower: true,
+    });
   }
+
   next();
 });
 
