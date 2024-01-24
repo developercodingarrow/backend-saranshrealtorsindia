@@ -47,4 +47,6 @@ router.delete(
   projectController.deleteFloorPlanImage
 );
 
+router.get("/fillter-projects", projectController.fillterProjects);
+
 module.exports = router;

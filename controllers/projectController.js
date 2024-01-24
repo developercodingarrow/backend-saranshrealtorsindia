@@ -76,3 +76,64 @@ exports.deleteProjectThumblin = Factory.deleteSingleImage(
   "ProjectThumblin",
   "project-thumblin"
 );
+
+exports.fillterProjects = catchAsync(async (req, res, next) => {
+  const queryObj = { ...req.query };
+  const { searchTerm, minPrice, unitTypes, city, builder, projectStatus } =
+    queryObj;
+  const excluedeFiled = ["page", "sort", "limit", "filed", "order", "search"];
+  excluedeFiled.forEach((el) => delete queryObj[el]);
+  console.log(queryObj);
+  let filter = {};
+
+  if (searchTerm) {
+    // Prefer searching in projectTitle, but include city and builder as well
+    const titleFilter = {
+      projectTitle: { $regex: new RegExp(searchTerm, "i") },
+    };
+    const cityFilter = { city: { $regex: new RegExp(searchTerm, "i") } };
+    const builderFilter = { builder: { $regex: new RegExp(searchTerm, "i") } };
+
+    filter = {
+      $or: [titleFilter, cityFilter, builderFilter],
+    };
+  }
+
+  if (minPrice) {
+    filter.price = { $gt: parseFloat(minPrice) };
+  }
+
+  if (unitTypes && Array.isArray(unitTypes)) {
+    // Use $in for case-insensitive matching
+    filter.typesofUnits = {
+      $in: unitTypes.map((type) => new RegExp(type, "i")),
+    };
+  }
+
+  if (city) {
+    filter.city = { $regex: new RegExp(city, "i") };
+  }
+
+  if (builder) {
+    filter.builder = { $regex: new RegExp(builder, "i") };
+  }
+
+  if (projectStatus) {
+    // Check if the provided projectStatus is a valid option
+    if (
+      ["Upcoming Project", "Ready to move", "under construction"].includes(
+        projectStatus
+      )
+    ) {
+      filter.projectStatus = projectStatus;
+    }
+  }
+  console.log(filter);
+
+  const data = await Projects.find(filter);
+  res.status(200).json({
+    total: data.length,
+    status: "succes",
+    result: data,
+  });
+});

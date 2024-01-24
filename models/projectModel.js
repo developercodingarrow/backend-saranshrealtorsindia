@@ -62,12 +62,10 @@ const projectSchema = new mongoose.Schema(
     },
     projectStatus: {
       type: String,
+      enum: ["Upcoming Project", "Ready to move", "under construction"],
       default: "Upcoming Project",
     },
-    slugProjectStatus: {
-      type: String,
-      // require: [true, "slug didn't work"],
-    },
+
     ProjectThumblin: {
       url: {
         type: String,
