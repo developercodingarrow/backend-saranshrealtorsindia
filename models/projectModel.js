@@ -50,7 +50,10 @@ const projectSchema = new mongoose.Schema(
     unitsNo: {
       type: Number,
     },
-    typesofUnits: ["2 BHK", "3 BHK", "4 BHK"],
+    typesofUnits: {
+      type: [String],
+      default: [],
+    },
     Possession: {
       type: String,
     },
@@ -121,6 +124,15 @@ projectSchema.pre("save", function (next) {
     });
   }
 
+  next();
+});
+
+projectSchema.pre("save", function (next) {
+  if (this.typesofUnits && this.typesofUnits.length > 0) {
+    this.typesofUnits = this.typesofUnits.map((unitType) =>
+      unitType.toLowerCase()
+    );
+  }
   next();
 });
 

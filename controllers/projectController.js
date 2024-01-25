@@ -77,63 +77,83 @@ exports.deleteProjectThumblin = Factory.deleteSingleImage(
   "project-thumblin"
 );
 
-exports.fillterProjects = catchAsync(async (req, res, next) => {
-  const queryObj = { ...req.query };
-  const { searchTerm, minPrice, unitTypes, city, builder, projectStatus } =
-    queryObj;
-  const excluedeFiled = ["page", "sort", "limit", "filed", "order", "search"];
-  excluedeFiled.forEach((el) => delete queryObj[el]);
-  console.log(queryObj);
+function buildFilter(queryObj) {
   let filter = {};
 
-  if (searchTerm) {
-    // Prefer searching in projectTitle, but include city and builder as well
-    const titleFilter = {
-      projectTitle: { $regex: new RegExp(searchTerm, "i") },
-    };
-    const cityFilter = { city: { $regex: new RegExp(searchTerm, "i") } };
-    const builderFilter = { builder: { $regex: new RegExp(searchTerm, "i") } };
+  for (const key in queryObj) {
+    if (Object.hasOwnProperty.call(queryObj, key)) {
+      const value = queryObj[key];
 
-    filter = {
-      $or: [titleFilter, cityFilter, builderFilter],
-    };
-  }
-
-  if (minPrice) {
-    filter.price = { $gt: parseFloat(minPrice) };
-  }
-
-  if (unitTypes && Array.isArray(unitTypes)) {
-    // Use $in for case-insensitive matching
-    filter.typesofUnits = {
-      $in: unitTypes.map((type) => new RegExp(type, "i")),
-    };
-  }
-
-  if (city) {
-    filter.city = { $regex: new RegExp(city, "i") };
-  }
-
-  if (builder) {
-    filter.builder = { $regex: new RegExp(builder, "i") };
-  }
-
-  if (projectStatus) {
-    // Check if the provided projectStatus is a valid option
-    if (
-      ["Upcoming Project", "Ready to move", "under construction"].includes(
-        projectStatus
-      )
-    ) {
-      filter.projectStatus = projectStatus;
+      // Check each query parameter and construct the filter accordingly
+      switch (key) {
+        case "searchTerm":
+          // Construct a $or query to search in multiple fields
+          filter.$or = [
+            { projectTitle: { $regex: new RegExp(value, "i") } },
+            { city: { $regex: new RegExp(value, "i") } },
+            { builder: { $regex: new RegExp(value, "i") } },
+          ];
+          break;
+        case "minPrice":
+          // Construct a filter for projects with price greater than the provided value
+          filter.price = { $gt: parseFloat(value) };
+          break;
+        case "unitTypes":
+          // Construct a filter to match projects with types of units specified
+          const unitTypesArray = value
+            .split(",")
+            .map((unitType) => unitType.trim().toLowerCase());
+          filter.typesofUnits = { $in: unitTypesArray };
+          break;
+        case "city":
+          // Construct a filter to match projects in the specified cities (comma-separated list)
+          const cityArray = value
+            .split(",")
+            .map((city) => new RegExp(city.trim(), "i"));
+          filter.city = { $in: cityArray };
+          break;
+        case "builder":
+          // Construct a filter to match projects with the specified builders (comma-separated list)
+          const builderArray = value
+            .split(",")
+            .map((builder) => new RegExp(builder.trim(), "i"));
+          filter.builder = { $in: builderArray };
+          break;
+        case "projectStatus":
+          // Construct a filter to match projects with the specified project statuses (comma-separated list)
+          const projectStatusArray = value
+            .split(",")
+            .map((status) => new RegExp(status.trim(), "i"));
+          filter.projectStatus = { $in: projectStatusArray };
+          break;
+        // Add more cases for other query parameters if needed
+        default:
+          // Handle other query parameters if necessary
+          break;
+      }
     }
   }
-  console.log(filter);
 
+  return filter;
+}
+
+exports.fillterProjects = catchAsync(async (req, res, next) => {
+  const queryObj = { ...req.query };
+  console.log(queryObj);
+  // Exclude unwanted fields from queryObj
+  const excludedFields = ["page", "sort", "limit", "filed", "order", "search"];
+  excludedFields.forEach((el) => delete queryObj[el]);
+
+  // Build the filter object
+  let filter = buildFilter(queryObj);
+
+  console.log(filter);
+  // Execute the query
   const data = await Projects.find(filter);
+
   res.status(200).json({
     total: data.length,
-    status: "succes",
+    status: "success",
     result: data,
   });
 });
