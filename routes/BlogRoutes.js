@@ -9,6 +9,7 @@ const {
 router.post("/create-blog", blogController.createBlog);
 router.get("/all-blogs", blogController.getAllBlogs);
 router.get("/single-blogs/:id", blogController.getBlog);
+router.get("/blog-detail/:slug", blogController.blogDetails);
 router.delete("/delete-blog", blogController.deleteBlog);
 router.patch("/update-blog/:id", blogController.updateBlog);
 

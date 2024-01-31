@@ -8,7 +8,9 @@ exports.deleteBlog = Factory.deleteOneByBody(Blogs);
 
 exports.getAllBlogs = Factory.getAll(Blogs);
 
-exports.getBlog = Factory.getOneBySlug(Blogs);
+exports.getBlog = Factory.getOneByID(Blogs);
+
+exports.blogDetails = Factory.getOneBySlug(Blogs);
 
 exports.updateBlog = Factory.updateOne(Blogs);
 

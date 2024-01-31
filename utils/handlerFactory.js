@@ -29,6 +29,18 @@ exports.getAll = (Model) => {
 // This function for GET ALL
 exports.getOneBySlug = (Model) => {
   return catchAsync(async (req, res, next) => {
+    const doc = await Model.findOne({ slug: req.params.slug });
+    res.status(200).json({
+      status: "success",
+      total: doc.length,
+      result: doc,
+    });
+  });
+};
+
+// This function for GET ALL
+exports.getOneByID = (Model) => {
+  return catchAsync(async (req, res, next) => {
     const doc = await Model.findOne({ _id: req.params.id });
     res.status(200).json({
       status: "success",

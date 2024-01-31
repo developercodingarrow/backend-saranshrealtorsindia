@@ -12,6 +12,7 @@ router.post("/create-project", projectController.createProject);
 router.get("/get-all-projects", projectController.getAllProjets);
 router.delete("/delete-project", projectController.deleteProject);
 router.get("/get-single-project/:id", projectController.getProject);
+router.get("/get-project/:slug", projectController.getSingleProject);
 router.patch("/update-project/:id", projectController.updateProject);
 
 router.patch(

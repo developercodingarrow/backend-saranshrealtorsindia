@@ -10,7 +10,8 @@ exports.deleteProject = Factory.deleteOneByBody(Projects);
 //3) GET ALL PROJECT API
 exports.getAllProjets = Factory.getAll(Projects);
 //4) GET SINGLE PROJECT API
-exports.getProject = Factory.getOneBySlug(Projects);
+exports.getProject = Factory.getOneByID(Projects);
+exports.getSingleProject = Factory.getOneBySlug(Projects);
 
 exports.updateProject = Factory.updateOne(Projects);
 

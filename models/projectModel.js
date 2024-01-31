@@ -108,30 +108,13 @@ const projectSchema = new mongoose.Schema(
 );
 
 projectSchema.pre("save", function (next) {
-  // Check if projectTitle is provided before generating the slug
   if (this.projectTitle) {
-    // Generate slug from projectTitle
-    const baseSlug = slugify(this.projectTitle, {
-      lower: true,
-    });
-
-    const randomString = new Date().getTime().toString(36).substring(7);
+    const baseSlug = slugify(this.projectTitle, { lower: true });
+    const randomString = Math.random().toString(36).substring(2, 6);
     this.slug = `${baseSlug}-${randomString}`;
   } else {
-    // Generate a random default slug with timestamp when projectTitle is not provided
-    this.slug = slugify(new Date().getTime().toString(36).substring(7), {
-      lower: true,
-    });
-  }
-
-  next();
-});
-
-projectSchema.pre("save", function (next) {
-  if (this.typesofUnits && this.typesofUnits.length > 0) {
-    this.typesofUnits = this.typesofUnits.map((unitType) =>
-      unitType.toLowerCase()
-    );
+    const randomString = Math.random().toString(36).substring(2, 6);
+    this.slug = slugify(randomString, { lower: true });
   }
   next();
 });
