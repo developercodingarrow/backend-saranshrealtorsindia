@@ -5,7 +5,7 @@ const builderSchema = new mongoose.Schema(
   {
     builderName: {
       type: String,
-      require: [true, "Please Tell us your Builder name!"],
+      require: [true, "Please Tell us your Builder Name!"],
     },
     slug: {
       type: String,

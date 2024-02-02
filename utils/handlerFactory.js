@@ -108,7 +108,7 @@ exports.updateThumblinByIdAndField = (Model, fieldName) => {
 
     // Respond with a success message and the updated data
     return res.status(200).json({
-      status: "Success",
+      status: "success",
       message: `${fieldName} updated successfully`,
       data,
     });
@@ -224,10 +224,9 @@ exports.deleteSingleImage = (Model, fieldName, imagePath) => {
       console.error(`Error deleting image: ${error.message}`);
     }
 
-    res.status(200).json({
-      status: "Success",
+    res.status(204).json({
+      status: "success",
       message: "Delete Image",
-      result: data,
     });
   });
 };

@@ -20,6 +20,7 @@ const blogSchema = new mongoose.Schema(
     BlogThumblin: {
       url: {
         type: String,
+        // default: "project-dummy-image.jpg",
       },
       altText: {
         type: String,
@@ -28,6 +29,7 @@ const blogSchema = new mongoose.Schema(
     BlogCoverImage: {
       url: {
         type: String,
+        // default: "project-dummy-image.jpg",
       },
       altText: {
         type: String,

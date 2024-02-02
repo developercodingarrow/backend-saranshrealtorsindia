@@ -81,10 +81,15 @@ exports.deleteProjectThumblin = Factory.deleteSingleImage(
 function buildFilter(queryObj) {
   let filter = {};
 
+  // Pagination logic
+  const page = parseInt(queryObj.page) || 1; // Current page number
+  const limit = parseInt(queryObj.limit) || 10; // Number of projects per page
+  const skip = (page - 1) * limit; // Number of projects to skip
+
   for (const key in queryObj) {
     if (Object.hasOwnProperty.call(queryObj, key)) {
       const value = queryObj[key];
-
+      console.log(value);
       // Check each query parameter and construct the filter accordingly
       switch (key) {
         case "searchTerm":
@@ -104,7 +109,9 @@ function buildFilter(queryObj) {
           const unitTypesArray = value
             .split(",")
             .map((unitType) => unitType.trim().toLowerCase());
-          filter.typesofUnits = { $in: unitTypesArray };
+          filter.typesofUnits = {
+            $in: unitTypesArray.map((unit) => new RegExp(unit, "i")),
+          };
           break;
         case "city":
           // Construct a filter to match projects in the specified cities (comma-separated list)
@@ -135,7 +142,7 @@ function buildFilter(queryObj) {
     }
   }
 
-  return filter;
+  return { filter, skip, limit };
 }
 
 exports.fillterProjects = catchAsync(async (req, res, next) => {
@@ -146,11 +153,16 @@ exports.fillterProjects = catchAsync(async (req, res, next) => {
   excludedFields.forEach((el) => delete queryObj[el]);
 
   // Build the filter object
-  let filter = buildFilter(queryObj);
+  const { filter, skip, limit } = buildFilter(queryObj);
 
   console.log(filter);
   // Execute the query
-  const data = await Projects.find(filter);
+
+  const sortOptions = { updatedAt: -1 };
+  const data = await Projects.find(filter)
+    .sort(sortOptions)
+    .skip(skip)
+    .limit(limit);
 
   res.status(200).json({
     total: data.length,

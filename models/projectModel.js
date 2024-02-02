@@ -12,6 +12,13 @@ const projectSchema = new mongoose.Schema(
       require: [true, "slug didn't work"],
       unique: true,
     },
+
+    propertytype: {
+      type: String,
+      enum: ["affordable", "luxury"],
+      default: "affordable",
+    },
+
     projectDescription: {
       type: String,
     },
@@ -65,7 +72,7 @@ const projectSchema = new mongoose.Schema(
     },
     projectStatus: {
       type: String,
-      enum: ["Upcoming Project", "Ready to move", "under construction"],
+      enum: ["upcoming Project", "ready to move", "under constructor"],
       default: "Upcoming Project",
     },
 

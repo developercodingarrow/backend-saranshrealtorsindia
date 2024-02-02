@@ -32,7 +32,7 @@ const OtpURL = () => {
 // jwt tooken function
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: 3600,
+    expiresIn: 36000,
   });
 };
 
@@ -300,6 +300,20 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = freshUser;
   next();
 });
+
+// all to acces user Role
+exports.restricTO = (...roles) => {
+  return (req, res, next) => {
+    // roles in Array
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError("You do not have permission to acces this", 403)
+      );
+    }
+
+    next();
+  };
+};
 
 // text protect
 exports.test = catchAsync(async (req, res, next) => {
