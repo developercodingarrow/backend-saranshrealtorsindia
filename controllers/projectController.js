@@ -15,6 +15,9 @@ exports.getSingleProject = Factory.getOneBySlug(Projects);
 
 exports.updateProject = Factory.updateOne(Projects);
 
+exports.updateFeatureProject = Factory.toggleBooleanField(Projects, "featured");
+
+exports.toogleIsActive = Factory.toggleBooleanField(Projects, "isActive");
 //5) UPDATE PROJECT THUMBLIN API
 exports.uploadThumblin = Factory.updateThumblinByIdAndField(
   Projects,
@@ -82,9 +85,12 @@ function buildFilter(queryObj) {
   let filter = {};
 
   // Pagination logic
-  const page = parseInt(queryObj.page) || 1; // Current page number
-  const limit = parseInt(queryObj.limit) || 10; // Number of projects per page
-  const skip = (page - 1) * limit; // Number of projects to skip
+  // const page = parseInt(queryObj.page) || 1;
+  // const limit = parseInt(queryObj.limit) || 2;
+  // console.log(page, "page value");
+  // console.log(limit, "limit value");
+  // const skip = (page - 1) * limit;
+  // console.log(skip, "skip value");
 
   for (const key in queryObj) {
     if (Object.hasOwnProperty.call(queryObj, key)) {
@@ -142,27 +148,22 @@ function buildFilter(queryObj) {
     }
   }
 
-  return { filter, skip, limit };
+  return { filter };
 }
 
 exports.fillterProjects = catchAsync(async (req, res, next) => {
   const queryObj = { ...req.query };
-  console.log(queryObj);
-  // Exclude unwanted fields from queryObj
   const excludedFields = ["page", "sort", "limit", "filed", "order", "search"];
   excludedFields.forEach((el) => delete queryObj[el]);
 
   // Build the filter object
-  const { filter, skip, limit } = buildFilter(queryObj);
+  const { filter } = buildFilter(queryObj);
 
-  console.log(filter);
   // Execute the query
+  console.log(filter);
 
   const sortOptions = { updatedAt: -1 };
-  const data = await Projects.find(filter)
-    .sort(sortOptions)
-    .skip(skip)
-    .limit(limit);
+  const data = await Projects.find(filter).sort(sortOptions);
 
   res.status(200).json({
     total: data.length,

@@ -6,6 +6,7 @@ const ProjectRoute = require("./routes/ProjectRoutes");
 const BlogRoute = require("./routes/BlogRoutes");
 const CityRoute = require("./routes/CityRoutes");
 const BuilderRoute = require("./routes/BuilderRoutes");
+const EnquireyRoute = require("./routes/EnquireyRoutes");
 
 const cors = require("cors");
 
@@ -19,6 +20,7 @@ app.use("/api/v1/saranshrealtorsindia/project", ProjectRoute);
 app.use("/api/v1/saranshrealtorsindia/blog", BlogRoute);
 app.use("/api/v1/saranshrealtorsindia/city", CityRoute);
 app.use("/api/v1/saranshrealtorsindia/builder", BuilderRoute);
+app.use("/api/v1/saranshrealtorsindia/enquiry", EnquireyRoute);
 
 // global Error Control
 app.use(globalErrorHandler);

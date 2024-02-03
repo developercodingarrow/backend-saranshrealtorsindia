@@ -87,6 +87,29 @@ exports.updateOne = (Model) => {
   });
 };
 
+exports.toggleBooleanField = (Model, fieldName) => {
+  return catchAsync(async (req, res, next) => {
+    const doc = await Model.findById(req.params.id);
+
+    if (!doc) {
+      return next(new AppError("No document found with this ID", 404));
+    }
+
+    // Toggle the boolean field
+    doc[fieldName] = !doc[fieldName];
+
+    // Save the updated document
+    await doc.save();
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        [fieldName]: doc[fieldName],
+      },
+    });
+  });
+};
+
 // Generic function to update a document's thumbnail image by slug for any model and field name
 exports.updateThumblinByIdAndField = (Model, fieldName) => {
   return catchAsync(async (req, res, next) => {

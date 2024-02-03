@@ -70,6 +70,12 @@ const projectSchema = new mongoose.Schema(
       enum: [false, true],
       default: false,
     },
+
+    isActive: {
+      type: Boolean,
+      enum: [false, true],
+      default: false,
+    },
     projectStatus: {
       type: String,
       enum: ["upcoming Project", "ready to move", "under constructor"],
