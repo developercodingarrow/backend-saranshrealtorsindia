@@ -9,4 +9,7 @@ router.post("/forgot-password", AuthController.forgatePassword);
 router.post("/reset-password/:token", AuthController.resetPassword);
 router.post("/login", AuthController.userLogin);
 
+router.use(AuthController.protect, AuthController.restricTO("super-admin"));
+router.post("/create-admin", AuthController.createAdmin);
+
 module.exports = router;

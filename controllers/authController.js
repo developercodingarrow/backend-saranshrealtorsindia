@@ -113,6 +113,84 @@ exports.userRegisteraion = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.createAdmin = catchAsync(async (req, res, next) => {
+  const { name, email, password, passwordConfirm } = req.body;
+  // 1)  check the user input file isEmpity
+  if ((!name || !email || !password, !passwordConfirm)) {
+    return next(new AppError("Please Provide Required filed"));
+  }
+
+  //2) Check user already exist or note
+  const checkUser = await User.findOne({ email });
+
+  if (!checkUser) {
+    // Generate OTP
+    const { otp, encryptedOtp } = await HashOTP();
+    const { UrlToken, hashedToken } = OtpURL();
+
+    const newUser = await User.create({
+      name,
+      email,
+      password,
+      otp: encryptedOtp,
+      otpTimestamp: new Date(),
+      otpgenerateToken: hashedToken,
+      isVerified: false,
+      role: "admin",
+    });
+
+    const otpverificationURL = `${req.protocal}:://${req.get(
+      "host"
+    )}/api/v1/users/verify-otp/${UrlToken}`;
+
+    await sendEmail({
+      email: email,
+      subject: "User Registration",
+      message: `<h1>This is your one Time  (OTP) ${otp} for registration please use OTP <h1> <br>
+                click on this Link ${otpverificationURL} and Verify the OTP`,
+    });
+
+    res.status(200).json({
+      status: "Success",
+      apiFor: "create-admin",
+      otp,
+      newUser,
+      UrlToken,
+      role: "admin",
+    });
+  } else if (checkUser.isVerified === true) {
+    return next(new AppError("you have already account Please Login"));
+  } else if (checkUser.isVerified === false) {
+    // Generate OTP
+    const { otp, encryptedOtp } = await HashOTP();
+    const { UrlToken, hashedToken } = OtpURL();
+
+    // save in data base again
+    checkUser.otpgenerateToken = hashedToken;
+    checkUser.otp = encryptedOtp;
+    await checkUser.save({ validateBeforeSave: false });
+
+    const otpverificationURL = `http:://${req.get(
+      "host"
+    )}/api/v1/saranshrealtorsindia/users/verify-otp/${UrlToken}`;
+
+    await sendEmail({
+      email: email,
+      subject: "User Registration",
+      message: `<h1>This is your one Time  (OTP) ${otp} for registration please use OTP <h1> <br>
+                click on this Link ${otpverificationURL} and Verify the OTP`,
+    });
+
+    res.status(200).json({
+      status: "Success",
+      apiFor: "create-admin",
+      otp,
+      UrlToken,
+      message: "Registration Successfull",
+    });
+  }
+});
+
 // Verify OTP and activate user's account
 exports.verifyOtp = catchAsync(async (req, res, next) => {
   //1) Get user based on the UrlToken

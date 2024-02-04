@@ -79,7 +79,7 @@ const projectSchema = new mongoose.Schema(
     projectStatus: {
       type: String,
       enum: ["upcoming Project", "ready to move", "under constructor"],
-      default: "Upcoming Project",
+      default: "upcoming Project",
     },
 
     ProjectThumblin: {
